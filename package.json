@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@antv/g6": "^4.8.24",
+    "@rollup/rollup-win32-x64-msvc": "^4.14.3",
     "element-plus": "^2.6.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"

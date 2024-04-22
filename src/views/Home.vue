@@ -2,38 +2,19 @@
   <div class="dnm-container">
     <div class="tool-container">
       <el-button @click="save">保存</el-button>
+      <el-button @click="delNode('c1-1')">删除c1-1</el-button>
     </div>
     <div id="container" ref="container" />
   </div>
 </template>
 
-
 <script setup>
 import G6 from '@antv/g6'
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
+import register from './regiser.js'
+
 let graph = null
 onMounted(() => {
-  const COLLAPSE_ICON = function COLLAPSE_ICON(x, y, r) {
-    return [
-      ['M', x - r, y - r],
-      ['a', r, r, 0, 1, 0, r * 2, 0],
-      ['a', r, r, 0, 1, 0, -r * 2, 0],
-      ['M', x + 2 - r, y - r],
-      ['L', x + r - 2, y - r]
-    ]
-  }
-  const EXPAND_ICON = function EXPAND_ICON(x, y, r) {
-    return [
-      ['M', x - r, y - r],
-      ['a', r, r, 0, 1, 0, r * 2, 0],
-      ['a', r, r, 0, 1, 0, -r * 2, 0],
-      ['M', x + 2 - r, y - r],
-      ['L', x + r - 2, y - r],
-      ['M', x, y - 2 * r + 2],
-      ['L', x, y - 2]
-    ]
-  }
-
   const data = {
     id: 'root',
     label: 'root',
@@ -101,168 +82,38 @@ onMounted(() => {
     ]
   }
 
-  G6.Util.traverseTree(data, (d) => {
-    d.leftIcon = {
-      style: {
-        fill: '#e6fffb',
-        stroke: '#e6fffb'
-      },
-      img: 'https://gw.alipayobjects.com/mdn/rms_f8c6a0/afts/img/A*Q_FQT6nwEC8AAAAAAAAAAABkARQnAQ'
-    }
-    return true
-  })
-
-  G6.registerNode(
-    'icon-node',
-    {
-      options: {
-        size: [60, 20],
-        stroke: '#91d5ff',
-        fill: '#91d5ff'
-      },
-      draw(cfg, group) {
-        const styles = this.getShapeStyle(cfg)
-        const { labelCfg = {} } = cfg
-
-        const w = styles.width
-        const h = styles.height
-
-        const keyShape = group.addShape('rect', {
-          attrs: {
-            ...styles,
-            x: -w / 2,
-            y: -h / 2
-          }
-        })
-
-        /**
-         * leftIcon 格式如下：
-         *  {
-         *    style: ShapeStyle;
-         *    img: ''
-         *  }
-         */
-        console.log('cfg.leftIcon', cfg.leftIcon)
-        if (cfg.leftIcon) {
-          const { style, img } = cfg.leftIcon
-          group.addShape('rect', {
-            attrs: {
-              x: 1 - w / 2,
-              y: 1 - h / 2,
-              width: 38,
-              height: styles.height - 2,
-              fill: '#8c8c8c',
-              ...style
-            }
-          })
-
-          group.addShape('image', {
-            attrs: {
-              x: 8 - w / 2,
-              y: 8 - h / 2,
-              width: 24,
-              height: 24,
-              img:
-                img ||
-                'https://g.alicdn.com/cm-design/arms-trace/1.0.155/styles/armsTrace/images/TAIR.png'
-            },
-            name: 'image-shape'
-          })
-        }
-
-        // 如果不需要动态增加或删除元素，则不需要 add 这两个 marker
-        group.addShape('marker', {
-          attrs: {
-            x: 40 - w / 2,
-            y: 52 - h / 2,
-            r: 6,
-            stroke: '#73d13d',
-            cursor: 'pointer',
-            symbol: EXPAND_ICON
-          },
-          name: 'add-item'
-        })
-
-        if (cfg.id !== 'root') {
-
-          group.addShape('marker', {
-            attrs: {
-              x: 80 - w / 2,
-              y: 52 - h / 2,
-              r: 6,
-              stroke: '#ff4d4f',
-              cursor: 'pointer',
-              symbol: COLLAPSE_ICON
-            },
-            name: 'remove-item'
-          })
-        }
-        if (cfg.label) {
-          group.addShape('text', {
-            attrs: {
-              ...labelCfg.style,
-              text: cfg.label,
-              x: 50 - w / 2,
-              y: 25 - h / 2
-            }
-          })
-        }
-
-        return keyShape
-      },
-      update: undefined
-    },
-    'rect'
-  )
-
-  G6.registerEdge('flow-line', {
-    draw(cfg, group) {
-      const startPoint = cfg.startPoint
-      const endPoint = cfg.endPoint
-
-      const { style } = cfg
-      const shape = group.addShape('path', {
-        attrs: {
-          stroke: style.stroke,
-          endArrow: style.endArrow,
-          path: [
-            ['M', startPoint.x, startPoint.y],
-            ['L', startPoint.x, (startPoint.y + endPoint.y) / 2],
-            ['L', endPoint.x, (startPoint.y + endPoint.y) / 2],
-            ['L', endPoint.x, endPoint.y]
-          ]
-        }
-      })
-
-      return shape
-    }
-  })
-
   const defaultStateStyles = {
     hover: {
-      stroke: '#1890ff',
-      lineWidth: 2
+      stroke: '#1879ff',
+      lineDash: [2]
+    },
+    closest: {
+      stroke: 'green'
+    },
+    active: {
+      stroke: '#1879ff'
     }
   }
 
   const defaultNodeStyle = {
-    fill: '#91d5ff',
-    stroke: '#40a9ff',
-    radius: 5
+    fill: '#ffffff',
+    stroke: '#000000',
+    radius: 5,
+    lineWidth: 0.5
   }
 
   const defaultEdgeStyle = {
-    stroke: '#91d5ff',
-    endArrow: {
-      path: 'M 0,0 L 12, 6 L 9,0 L 12, -6 Z',
-      fill: '#91d5ff',
-      d: -20
-    }
+    stroke: '#c1c6c9'
+    // endArrow: {
+    //   path: 'M 0,0 L 12, 6 L 9,0 L 12, -6 Z',
+    //   fill: '#91d5ff',
+    //   d: -20
+    // }
   }
 
   const defaultLayout = {
     type: 'compactBox',
-    direction: 'TB',
+    direction: 'LR',
     getId: function getId(d) {
       return d.id
     },
@@ -282,7 +133,7 @@ onMounted(() => {
 
   const defaultLabelCfg = {
     style: {
-      fill: '#000',
+      fill: '#565758',
       fontSize: 12
     }
   }
@@ -291,24 +142,31 @@ onMounted(() => {
   const width = container.scrollWidth
   const height = container.scrollHeight - 1 || 500
 
+  register()
+
   graph = new G6.TreeGraph({
     container: 'container',
     width,
     height,
-    linkCenter: true,
     modes: {
-      default: ['drag-canvas', 'zoom-canvas',]
+      default: [
+        'drag-canvas',
+        'zoom-canvas',
+        {
+          type: 'drag-node',
+          enableDelegate: true
+        },
+        'activate-node',
+        'drag-node-connect'
+      ]
     },
     defaultNode: {
       type: 'icon-node',
-      size: [120, 40],
+      size: [90, 30],
       style: defaultNodeStyle,
-      labelCfg: defaultLabelCfg,
-
+      labelCfg: defaultLabelCfg
     },
-    animate: false,
     defaultEdge: {
-      type: 'flow-line',
       style: defaultEdgeStyle
     },
     nodeStateStyles: defaultStateStyles,
@@ -319,42 +177,6 @@ onMounted(() => {
   graph.data(data)
   graph.render()
   graph.fitView()
-
-  // let targetNode = null
-  // graph.on('node:dragend', (evt) => {
-  //   if(!targetNode){
-  //     return
-  //   }
-  //   const { item, target } = evt
-  //   console.log('被拖曳元素 dragend', item.getModel());
-  //   const curNode = item.getModel()
-
-
-  //   console.log('curNode', curNode);
-  //   graph.removeChild(curNode.id)
-  //   console.log('curNode', curNode);
-  //   // console.log('targetNode', targetNode);
-  //   setTimeout(()=>{
-  //     // graph.layout(true);
-
-
-  //   if (!targetNode.children) {
-  //       targetNode.children = []
-  //     }
-  //     targetNode.children.push(curNode)
-  //     graph.updateChild(targetNode, targetNode.id)
-  //     targetNode = null
-  //   },100)
-  // })
-  // graph.on('node:drop', (evt) => {
-  //   const { item, target } = evt
-  //   console.log('目标元素 drop', item.getModel());
-  //   targetNode = item.getModel()
-  // })
-  // graph.on('node:dragstart', (evt) => {
-  //   const { item } = evt
-  //   item.toFront()
-  // })
 
   graph.on('node:mouseenter', (evt) => {
     const { item } = evt
@@ -367,13 +189,13 @@ onMounted(() => {
   })
 
   graph.on('node:click', (evt) => {
-    console.log('evt', evt);
+    console.log('evt', evt)
     const { item, target } = evt
     const targetType = target.get('type')
     const name = target.get('name')
 
     // 增加元素
-    if (targetType === 'marker') {
+    if (targetType === 'image') {
       const model = item.getModel()
       if (name === 'add-item') {
         if (!model.children) {
@@ -393,6 +215,7 @@ onMounted(() => {
         })
         graph.updateChild(model, model.id)
       } else if (name === 'remove-item') {
+        console.log('remove-item', 22)
         graph.removeChild(model.id)
       }
     }
@@ -407,22 +230,23 @@ onMounted(() => {
 })
 function save() {
   const data = graph.save()
-  console.log('daat', data);
+  console.log('daat', data)
 }
-
+function delNode(id) {
+  graph.removeChild(id)
+}
 </script>
-
 
 <style scoped lang="less">
 .dnm-container {
-  height: 100VH;
+  height: 100vh;
 
   .tool-container {
     height: 60px;
     align-items: center;
     display: flex;
     justify-content: end;
-    padding: 0 30px
+    padding: 0 30px;
   }
 
   #container {
