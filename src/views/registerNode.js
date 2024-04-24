@@ -1,6 +1,13 @@
 import G6 from '@antv/g6'
 import delImg from '@/assets/del.png'
 import addImg from '@/assets/add.png'
+import startImg from '@/assets/nodeType/start.png'
+import ruleImg from '@/assets/nodeType/rule.png'
+
+const nodeTypeMap = {
+    start: startImg,
+    rule: ruleImg,
+}
 
 export default function () {
     G6.registerNode(
@@ -13,6 +20,7 @@ export default function () {
             },
             draw (cfg, group) {
                 const styles = this.getShapeStyle(cfg)
+                console.log('cfg', cfg);
                 const { labelCfg = {} } = cfg
                 const w = styles.width
                 const h = styles.height
@@ -82,13 +90,29 @@ export default function () {
                         attrs: {
                             ...labelCfg.style,
                             text: cfg.label,
-                            x: 0,
+                            x: 15 / 2,
                             y: 0,
                             textAlign: 'center',
                             textBaseline: 'middle',
                             cursor: 'pointer'
                         },
                         draggable: true
+                    })
+                    let nodeType = cfg.nodeType || 'rule'
+                    if (cfg.id === 'root') {
+                        nodeType = 'start'
+                    }
+                    group.addShape('image', {
+                        attrs: {
+                            x: 0 - 15 / 2 - w / 2 + 20,
+                            y: 0 - 15 / 2,
+                            width: 15,
+                            height: 15,
+                            img: nodeTypeMap[nodeType],
+                            textAlign: 'center',
+                            textBaseline: 'middle',
+                        },
+                        name: 'node-type-icon',
                     })
                 }
 
