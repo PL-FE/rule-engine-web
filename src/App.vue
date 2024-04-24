@@ -1,9 +1,9 @@
 <script setup>
-import Home from './views/Home.vue'
+import RulePage from './views/RulePage.vue'
 </script>
 
 <template>
-  <Home />
+  <RulePage />
 </template>
 
 <style scoped></style>

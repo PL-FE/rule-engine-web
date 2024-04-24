@@ -14,7 +14,6 @@ export default function () {
             draw (cfg, group) {
                 const styles = this.getShapeStyle(cfg)
                 const { labelCfg = {} } = cfg
-
                 const w = styles.width
                 const h = styles.height
 
@@ -59,7 +58,8 @@ export default function () {
                         img: addImg,
                         cursor: 'pointer'
                     },
-                    name: 'add-item'
+                    name: 'add-item',
+                    visible: false
                 })
 
                 if (cfg.id !== 'root') {
@@ -73,7 +73,8 @@ export default function () {
                             img: delImg,
                             cursor: 'pointer'
                         },
-                        name: 'remove-item'
+                        name: 'remove-item',
+                        visible: false
                     })
                 }
                 if (cfg.label) {
