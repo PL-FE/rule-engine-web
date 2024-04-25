@@ -1,17 +1,11 @@
 import G6 from '@antv/g6'
 import delImg from '@/assets/del.png'
 import addImg from '@/assets/add.png'
-import startImg from '@/assets/nodeType/start.png'
-import ruleImg from '@/assets/nodeType/rule.png'
-
-const nodeTypeMap = {
-    start: startImg,
-    rule: ruleImg,
-}
+import { nodeTypeMap } from './nodeTypeMap'
 
 export default function () {
     G6.registerNode(
-        'icon-node',
+        'baseNode',
         {
             options: {
                 size: [60, 20],
@@ -20,7 +14,6 @@ export default function () {
             },
             draw (cfg, group) {
                 const styles = this.getShapeStyle(cfg)
-                console.log('cfg', cfg);
                 const { labelCfg = {} } = cfg
                 const w = styles.width
                 const h = styles.height
@@ -90,25 +83,23 @@ export default function () {
                         attrs: {
                             ...labelCfg.style,
                             text: cfg.label,
-                            x: 15 / 2,
+                            x: 15 / 2 + 4,
                             y: 0,
                             textAlign: 'center',
                             textBaseline: 'middle',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            fontSize: 10,
                         },
                         draggable: true
                     })
                     let nodeType = cfg.nodeType || 'rule'
-                    if (cfg.id === 'root') {
-                        nodeType = 'start'
-                    }
                     group.addShape('image', {
                         attrs: {
                             x: 0 - 15 / 2 - w / 2 + 20,
                             y: 0 - 15 / 2,
                             width: 15,
                             height: 15,
-                            img: nodeTypeMap[nodeType],
+                            img: nodeTypeMap[nodeType].icon,
                             textAlign: 'center',
                             textBaseline: 'middle',
                         },

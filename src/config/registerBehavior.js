@@ -15,7 +15,6 @@ export default function () {
             }
         },
         onNodeClick (e) {
-            console.log('11', 11)
             const graph = this.graph
             const item = e.item
             if (item.hasState('active')) {

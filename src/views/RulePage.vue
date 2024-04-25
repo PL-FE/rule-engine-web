@@ -5,16 +5,18 @@
     </div>
     <div id="container" ref="container" />
     <PropertyPanel v-model:node="propertyPanelData" />
+    <Menu v-show="!!menuXY" :x="menuXY?.x" :y="menuXY?.y" />
   </div>
 </template>
 
 <script setup>
 import G6 from '@antv/g6'
-import { onMounted, ref } from 'vue'
-import registerBehavior from './registerBehavior.js'
-import registerNode from './registerNode.js'
-import data from './data.js'
-import PropertyPanel from './PropertyPanel.vue'
+import { onMounted, provide, ref } from 'vue'
+import registerBehavior from '@/config/registerBehavior.js'
+import registerNode from '@/config/registerNode.js'
+import data from '@/config/data.js'
+import PropertyPanel from '@/components/property-panel/index.vue'
+import Menu from '@/components/menu/index.vue'
 
 import {
   defaultStateStyles,
@@ -22,16 +24,16 @@ import {
   defaultEdgeStyle,
   defaultLayout,
   defaultLabelCfg
-} from './defaultConfig'
+} from '@/config/defaultConfig'
 
 const propertyPanelData = ref(null)
-
+const menuXY = ref(null)
 let graph = null
+
 onMounted(() => {
-  const container = document.getElementById('container')
+  const container = document.querySelector('#container')
   const width = container.scrollWidth
   const height = container.scrollHeight - 1 || 500
-
   registerBehavior()
   registerNode()
 
@@ -52,7 +54,7 @@ onMounted(() => {
       ]
     },
     defaultNode: {
-      type: 'icon-node',
+      type: 'baseNode',
       size: [90, 30],
       style: defaultNodeStyle,
       labelCfg: defaultLabelCfg
@@ -64,6 +66,7 @@ onMounted(() => {
     edgeStateStyles: defaultStateStyles,
     layout: defaultLayout
   })
+  window.graph = graph
 
   graph.data(data)
   graph.render()
@@ -80,13 +83,12 @@ onMounted(() => {
 })
 function save() {
   const data = graph.save()
-  console.log('daat', data)
+  console.log('data', data)
 }
 
 function eventListener() {
   // 鼠标移入目标元素上方，鼠标移到其后代元素上时会触发
   graph.on('node:mouseenter', (evt) => {
-    console.log('evt', evt)
     const { item } = evt
     graph.setItemState(item, 'hover', true)
   })
@@ -103,14 +105,19 @@ function eventListener() {
   })
 
   graph.on('node:click', (evt) => {
-    console.log('evt', evt)
+    console.log('click', evt)
     const { item, target } = evt
     handleToolAction(item, target)
-    handlePropertyPanel(item)
+    // handlePropertyPanel(item)
   })
 }
 
 function handlePropertyPanel(node) {
+  const model = node.getModel()
+  if (model.id === 'root') {
+    propertyPanelData.value = null
+    return
+  }
   propertyPanelData.value = node
 }
 
@@ -120,13 +127,19 @@ function handlePropertyPanel(node) {
  * @param {Shape} shape
  */
 function handleToolAction(node, shape) {
-  toggleToolAction(node)
-
   const name = shape.get('name')
   const targetType = shape.get('type')
+  toggleToolAction(node)
   if (targetType === 'image') {
     const model = node.getModel()
     if (name === 'add-item') {
+      // TODO: 左键菜单
+      // const size = node.getBBox()
+      // console.log('size', size)
+      // menuXY.value = graph.getClientByPoint(
+      //   size.centerX + size.width / 2,
+      //   size.centerY - size.height / 2
+      // )
       if (!model.children) {
         model.children = []
       }
@@ -138,7 +151,6 @@ function handleToolAction(node, shape) {
       })
       graph.updateChild(model, model.id)
     } else if (name === 'remove-item') {
-      console.log('remove-item', 22)
       graph.removeChild(model.id)
     }
   }
@@ -190,7 +202,8 @@ function toggleToolAction(Node) {
   }
 
   #container {
-    height: calc(100% - 60px);
+    height: calc(100% - 70px);
   }
 }
 </style>
+../config/defaultConfig.js../config/registerBehavior.js../config/registerNode.js../config/data.js
