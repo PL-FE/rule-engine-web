@@ -31,16 +31,15 @@ const menuXY = ref(null)
 let graph = null
 
 onMounted(() => {
-  const container = document.querySelector('#container')
-  const width = container.scrollWidth
-  const height = container.scrollHeight - 1 || 500
+  // const container = document.querySelector('#container')
+  // const width = container.scrollWidth
+  // const height = container.scrollHeight - 1 || 500
   registerBehavior()
   registerNode()
 
   graph = new G6.TreeGraph({
     container: 'container',
-    width,
-    height,
+    fitView: true,
     modes: {
       default: [
         'drag-canvas',
@@ -77,8 +76,11 @@ onMounted(() => {
   if (typeof window !== 'undefined')
     window.onresize = () => {
       if (!graph || graph.get('destroyed')) return
-      if (!container || !container.scrollWidth || !container.scrollHeight) return
-      graph.changeSize(container.scrollWidth, container.scrollHeight)
+      if (!container || !container.clientWidth || !container.clientHeight) return
+      graph.changeSize(container.clientWidth, container.clientHeight)
+
+      graph.render()
+      graph.fitView()
     }
 })
 function save() {
@@ -108,7 +110,7 @@ function eventListener() {
     console.log('click', evt)
     const { item, target } = evt
     handleToolAction(item, target)
-    // handlePropertyPanel(item)
+    handlePropertyPanel(item)
   })
 }
 
@@ -191,7 +193,6 @@ function toggleToolAction(Node) {
 
 <style scoped lang="less">
 .dnm-container {
-  height: 100vh;
   background-color: #f4f7f9;
   .tool-meun-container {
     height: 60px;
@@ -199,11 +200,13 @@ function toggleToolAction(Node) {
     display: flex;
     justify-content: end;
     padding: 0 30px;
+    position: fixed;
+    right: 0;
   }
 
   #container {
-    height: calc(100% - 70px);
+    height: 100vh;
+    overflow: hidden;
   }
 }
 </style>
-../config/defaultConfig.js../config/registerBehavior.js../config/registerNode.js../config/data.js
