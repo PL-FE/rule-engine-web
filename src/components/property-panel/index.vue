@@ -43,7 +43,8 @@ const label = computed({
     return data.value?.label
   },
   set(val) {
-    graph.updateItem(node.value, {
+    console.log('val', val)
+    window.graph.updateItem(node.value, {
       label: val
     })
   }
