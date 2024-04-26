@@ -1,35 +1,16 @@
-# x6-demo
+# 决策引擎
 
-This template should help get you started developing with Vue 3 in Vite.
+## 技术栈
+- vue 3.4.x
+- pinia 2.1.x
+- vite 5.x
+- element-plus 2.6.x
+- @antv/g6 4.8.x
+- tailwindcss 3.4.x
 
-## Recommended IDE Setup
+## 环境
+- node >= 20.7.0
+- pnpm >= 7
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+## 参考
+- [jvs-rule](https://rules.bctools.cn/?client_id=rules#/policyproject/index)
