@@ -1,9 +1,10 @@
 <script setup>
-import RulePage from './views/RulePage.vue'
+// import RulePage from './views/RulePage.vue'
 </script>
 
 <template>
-  <RulePage />
+  <!-- <RulePage /> -->
+  <router-view></router-view>
 </template>
 
 <style scoped></style>

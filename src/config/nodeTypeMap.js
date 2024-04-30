@@ -1,8 +1,8 @@
 
-import startImg from '@/assets/nodeType/start.png'
-import ruleImg from '@/assets/nodeType/rule.png'
-import gatewayImg from '@/assets/nodeType/gateway.png'
-import ratingImg from '@/assets/nodeType/rating.png'
+import startImg from '@/assets/images/nodeType/start.png'
+import ruleImg from '@/assets/images/nodeType/rule.png'
+import gatewayImg from '@/assets/images/nodeType/gateway.png'
+import ratingImg from '@/assets/images/nodeType/rating.png'
 
 
 export const nodeTypeMap = {

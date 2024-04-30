@@ -1,6 +1,6 @@
 import G6 from '@antv/g6'
-import delImg from '@/assets/del.png'
-import addImg from '@/assets/add.png'
+import delImg from '@/assets/images/del.png'
+import addImg from '@/assets/images/add.png'
 import { nodeTypeMap } from './nodeTypeMap'
 
 export default function () {
