@@ -11,12 +11,12 @@
 
 <script setup>
 import G6 from '@antv/g6'
-import { onMounted, provide, ref } from 'vue'
-import registerBehavior from '@/config/registerBehavior.js'
-import registerNode from '@/config/registerNode.js'
-import data from '@/config/data.js'
-import PropertyPanel from '@/components/property-panel/index.vue'
-import Menu from '@/components/menu/index.vue'
+import { onMounted, ref } from 'vue'
+import registerBehavior from './config/registerBehavior.js'
+import registerNode from './config/registerNode.js'
+import data from './config/data.js'
+import PropertyPanel from './components/property-panel/index.vue'
+import Menu from './components/menu/index.vue'
 
 import {
   defaultStateStyles,
@@ -24,7 +24,7 @@ import {
   defaultEdgeStyle,
   defaultLayout,
   defaultLabelCfg
-} from '@/config/defaultConfig'
+} from './config/defaultConfig'
 
 const propertyPanelData = ref(null)
 const menuXY = ref(null)
@@ -78,9 +78,6 @@ onMounted(() => {
       if (!graph || graph.get('destroyed')) return
       if (!container || !container.clientWidth || !container.clientHeight) return
       graph.changeSize(container.clientWidth, container.clientHeight)
-
-      graph.render()
-      graph.fitView()
     }
 })
 function save() {

@@ -20,7 +20,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { nodeTypeMap } from '@/config/nodeTypeMap.js'
+import { nodeTypeMap } from '../../config/nodeTypeMap.js'
 import rating from './node-form/rating.vue'
 import gateway from './node-form/gateway.vue'
 import rule from './node-form/rule.vue'

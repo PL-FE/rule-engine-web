@@ -9,8 +9,10 @@
           <Aside></Aside>
         </el-aside>
         <el-main>
-          <!-- <DecisionPage /> -->
-          <DefaultMain v-if="!leftData.selected" />
+          <!-- Commenting HTML code -->
+          <!-- <DefaultMain v-if="!leftData.selected" /> -->
+          <!-- <policyView v-else /> -->
+          <policyView />
         </el-main>
       </el-container>
     </el-container>
@@ -23,7 +25,7 @@ import Header from './Header.vue'
 import DefaultMain from './Main.vue'
 import { useLayout } from './layoutHooks.js'
 const { leftData } = useLayout()
-// import DecisionPage from '@/views/decision-page/index.vue'
+import policyView from '@/views/policy-view/index.vue'
 </script>
 
 <style scoped lang="less">
