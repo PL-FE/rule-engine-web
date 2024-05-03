@@ -7,13 +7,17 @@
           {{ nodeConfig?.label }}
         </span>
       </span>
-      <span class="flex items-center">
-        <span>节点名称</span>
-        <el-input class="w-80 ml-2" v-model="label" :maxlength="5"></el-input>
+      <span class="flex items-center flex-nowrap">
+        <div class="w-32">节点名称</div>
+        <el-input class="w-80" v-model="label" :maxlength="5"></el-input>
       </span>
     </div>
     <div class="from-body">
-      <component v-if="data?.nodeType" :is="formInstanceMap[data.nodeType]"></component>
+      <component
+        v-if="data?.nodeType"
+        :is="nodeTypeMap[data.nodeType].propertyPanel"
+        :node="node"
+      ></component>
     </div>
   </div>
 </template>
@@ -21,15 +25,6 @@
 <script setup>
 import { computed } from 'vue'
 import { nodeTypeMap } from '../../config/nodeTypeMap.js'
-import rating from './node-form/rating.vue'
-import gateway from './node-form/gateway.vue'
-import rule from './node-form/rule.vue'
-
-const formInstanceMap = {
-  rating,
-  gateway,
-  rule
-}
 
 const node = defineModel('node')
 const visible = computed(() => {
@@ -43,7 +38,6 @@ const label = computed({
     return data.value?.label
   },
   set(val) {
-    console.log('val', val)
     window.graph.updateItem(node.value, {
       label: val
     })

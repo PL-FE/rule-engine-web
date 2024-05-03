@@ -5,13 +5,13 @@
     </div>
     <div id="container" ref="container" />
     <PropertyPanel v-model:node="propertyPanelData" />
-    <Menu v-show="!!menuXY" :x="menuXY?.x" :y="menuXY?.y" />
+    <Menu v-show="!!menuData" v-model:menuData="menuData" />
   </div>
 </template>
 
 <script setup>
 import G6 from '@antv/g6'
-import { onMounted, ref } from 'vue'
+import { createApp, onMounted, ref } from 'vue'
 import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
 import data from './config/data.js'
@@ -27,7 +27,7 @@ import {
 } from './config/defaultConfig'
 
 const propertyPanelData = ref(null)
-const menuXY = ref(null)
+const menuData = ref(null)
 let graph = null
 
 onMounted(() => {
@@ -36,14 +36,12 @@ onMounted(() => {
   // const height = container.scrollHeight - 1 || 500
   registerBehavior()
   registerNode()
-
   graph = new G6.TreeGraph({
     container: 'container',
-    fitView: true,
     modes: {
       default: [
         'drag-canvas',
-        'zoom-canvas',
+        // 'zoom-canvas',
         {
           type: 'drag-node',
           enableDelegate: true
@@ -69,7 +67,7 @@ onMounted(() => {
 
   graph.data(data)
   graph.render()
-  graph.fitView()
+  graph.fitCenter()
 
   eventListener()
 
@@ -99,18 +97,32 @@ function eventListener() {
 
   // 鼠标左键单击画布时触发
   graph.on('canvas:click', () => {
-    toggleToolAction()
     propertyPanelData.value = null
+  })
+  // 鼠标右键
+  graph.on('node:contextmenu', (evt) => {
+    evt.preventDefault()
+    hadnleShowMenu(evt)
+  })
+  window.addEventListener('click', () => {
+    menuData.value = null
   })
 
   graph.on('node:click', (evt) => {
     console.log('click', evt)
     const { item, target } = evt
-    handleToolAction(item, target)
     handlePropertyPanel(item)
   })
 }
 
+function hadnleShowMenu({ clientX, clientY, item }) {
+  menuData.value = {
+    x: clientX,
+    y: clientY,
+    node: item,
+    graph
+  }
+}
 function handlePropertyPanel(node) {
   const model = node.getModel()
   if (model.id === 'root') {
@@ -119,78 +131,13 @@ function handlePropertyPanel(node) {
   }
   propertyPanelData.value = node
 }
-
-/**
- * 处理按钮的点击行为
- * @param {Node} node
- * @param {Shape} shape
- */
-function handleToolAction(node, shape) {
-  const name = shape.get('name')
-  const targetType = shape.get('type')
-  toggleToolAction(node)
-  if (targetType === 'image') {
-    const model = node.getModel()
-    if (name === 'add-item') {
-      // TODO: 左键菜单
-      // const size = node.getBBox()
-      // console.log('size', size)
-      // menuXY.value = graph.getClientByPoint(
-      //   size.centerX + size.width / 2,
-      //   size.centerY - size.height / 2
-      // )
-      if (!model.children) {
-        model.children = []
-      }
-      const id = `n-${Math.random()}`
-      model.children.push({
-        id,
-        label: id.substr(0, 8),
-        nodeType: 'rule'
-      })
-      graph.updateChild(model, model.id)
-    } else if (name === 'remove-item') {
-      graph.removeChild(model.id)
-    }
-  }
-}
-
-/**
- * 找到当前节点下的工具按钮
- * @param {Node} ndoe
- * @returns {Node} child
- */
-function findToolAction(ndoe) {
-  const group = ndoe.getContainer()
-  const child = group.findAll(function (item) {
-    return ['add-item', 'remove-item'].includes(item.cfg.name) // 找到首个填充为红色的图形
-  })
-  return child
-}
-
-/**
- * 切换node下工具按钮的显示和隐藏
- * @param {Node} Node
- */
-function toggleToolAction(Node) {
-  const nodes = graph.getNodes()
-  // 先隐藏所有的
-  nodes.forEach((node) => {
-    const child = findToolAction(node)
-    child.forEach((c) => c.cfg.visible && c.hide())
-  })
-  if (!Node) {
-    return
-  }
-  // 再显示当前点击的
-  const child = findToolAction(Node)
-  child.forEach((c) => (c.cfg.visible ? c.hide() : c.show()))
-}
 </script>
 
 <style scoped lang="less">
 .dnm-container {
   background-color: #f4f7f9;
+  position: relative;
+  overflow: hidden;
   .tool-meun-container {
     height: 60px;
     align-items: center;
