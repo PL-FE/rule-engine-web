@@ -5,13 +5,10 @@
         <Header></Header>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="200px" v-resize>
           <Aside></Aside>
         </el-aside>
         <el-main>
-          <!-- Commenting HTML code -->
-          <!-- <DefaultMain v-if="!leftData.selected" /> -->
-          <!-- <policyView v-else /> -->
           <policyView />
         </el-main>
       </el-container>

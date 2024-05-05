@@ -1,5 +1,5 @@
 <template>
-  <svg :class="svgClass" aria-hidden="true">
+  <svg :class="svgClass" aria-hidden="true" :style="{ width, height }">
     <use :xlink:href="iconClassName" :fill="color" />
   </svg>
 </template>
@@ -51,8 +51,6 @@ const svgClass = computed(() => {
 </script>
 <style lang="less">
 .svg-icon {
-  width: v-bind(width);
-  height: v-bind(height);
   position: relative;
   fill: currentColor;
   vertical-align: -2px;
