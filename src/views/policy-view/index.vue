@@ -11,7 +11,7 @@
     </el-tabs>
     <div class="tool absolute right-0 top-0">
       <el-button type="primary">启用</el-button>
-      <el-button type="primary" @click="router.push({ path: '/policy-design/123' })"
+      <el-button type="primary" @click="router.push({ path: '/policy-project/123' })"
         >设计</el-button
       >
     </div>
