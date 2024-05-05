@@ -1,5 +1,5 @@
 <template>
-  <div v-show="visible" class="PropertyPanel-container">
+  <div v-show="visible" class="PropertyPanel-container" v-resize.y>
     <div class="top-container flex justify-between px-4 py-2">
       <span class="flex items-center">
         <img :src="nodeConfig?.icon" width="20px" height="20px" class="mr-2" />

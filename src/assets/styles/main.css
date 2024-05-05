@@ -9,3 +9,18 @@ body,html{
     padding: 0;
     height: 100vh;
 }
+
+.dragDomRight {
+    width: 5px;
+    height: 100%;
+    &:hover,&:active,&:focus {
+        background-color: #409eff;
+    }
+}
+.dragDomTop {
+    width: 100%;
+    height: 5px;
+    &:hover,&:active,&:focus {
+        background-color: #409eff;
+    }
+}
