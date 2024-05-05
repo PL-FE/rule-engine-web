@@ -11,9 +11,11 @@ import G6 from '@antv/g6'
 import { onMounted, ref } from 'vue'
 import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
-import data from './config/data.js'
 import PropertyPanel from './components/property-panel/index.vue'
 import Menu from './components/menu/index.vue'
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
+const { policyProjectData } = policyProjectStore
 
 import {
   defaultStateStyles,
@@ -55,7 +57,7 @@ onMounted(() => {
   })
   window.graph = graph
 
-  graph.data(data)
+  graph.data(policyProjectData.data)
   graph.render()
   graph.fitView()
 
@@ -122,3 +124,4 @@ function handlePropertyPanel(node) {
   }
 }
 </style>
+../../stores/data.js

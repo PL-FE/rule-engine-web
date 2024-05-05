@@ -1,17 +1,17 @@
 <template>
   <el-container class="bg-[#f4f7f9] h-screen">
     <el-header class="flex items-center justify-between relative bg-white">
-      <div class="policy-name">
+      <div class="policy-name flex items-center">
         <svg-icon iconName="v-icon-wjj1" />
         <el-input
           ref="policyNameInputRef"
           type="text"
-          v-model="policyName"
+          v-model="policyProjectData.name"
           class="!w-60 px-4"
           v-if="isEditPolicyName"
           @blur="isEditPolicyName = false"
         ></el-input>
-        <span v-else class="px-4">{{ policyName }}</span>
+        <span v-else class="px-4">{{ policyProjectData.name }}</span>
         <svg-icon
           v-if="!isEditPolicyName"
           iconName="v-icon-icon-edit"
@@ -27,11 +27,12 @@
         </el-tabs>
       </div>
       <dib class="btn-action">
-        <el-button>设计</el-button>
+        <el-button @click="handlerPolicyProjectSave">保存</el-button>
       </dib>
     </el-header>
-    <el-main class="!flex justify-center">
-      <BaseInfo />
+    <el-main class="!flex justify-center !p-0">
+      <BaseInfo v-if="activeName === '1'" />
+      <PolicyDesign v-else-if="activeName === '2'" />
     </el-main>
   </el-container>
 </template>
@@ -39,12 +40,16 @@
 <script setup>
 import { ref } from 'vue'
 import BaseInfo from './base-info/index.vue'
+import PolicyDesign from '@/components/policy-design/index.vue'
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
+const { policyProjectData } = policyProjectStore
+
 const activeName = ref('1')
 const handleClick = (tab, event) => {
   console.log(tab, event)
 }
 
-const policyName = ref('信贷简单审核示例')
 const policyNameInputRef = ref(null)
 const isEditPolicyName = ref(false)
 
@@ -54,6 +59,11 @@ const handleEditPolicyName = () => {
   setTimeout(() => {
     policyNameInputRef.value?.focus()
   }, 0)
+}
+
+const handlerPolicyProjectSave = () => {
+  const data = window.graph?.save()
+  console.log('data', data)
 }
 </script>
 

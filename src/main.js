@@ -13,14 +13,16 @@ app.use(ElementPlus)
 app.use(router)
 app.component('SvgIcon', SvgIcon)
 app.directive('resize', {
-  mounted(el, binding) {
+  mounted (el, binding) {
     const dragDom = el
     const { modifiers } = binding
     let { x, y } = modifiers
     if (!x && !y) {
       x = true
     }
-    if (!dragDom.style.position || dragDom.style.position === 'static') {
+    // 获取dragDom元素的css有没有定位属性，没有则添加
+    const style = window.getComputedStyle(dragDom, null)
+    if (style.position === 'static') {
       dragDom.style.position = 'relative'
     }
     if (x) {
@@ -33,10 +35,11 @@ app.directive('resize', {
       dragDom.appendChild(dragDomRight)
       // 拖动dragDomRight，改变dragDom的宽度
       dragDomRight.onmousedown = (e) => {
-        const disX = e.clientX - dragDom.offsetWidth
+        const clientX = e.clientX
+        const offsetWidth = dragDom.offsetWidth
         document.onmousemove = (e) => {
           e.preventDefault()
-          dragDom.style.width = e.clientX - disX + 'px'
+          dragDom.style.width = e.clientX - clientX + offsetWidth + 'px'
         }
         document.onmouseup = () => {
           document.onmousemove = null
@@ -52,12 +55,11 @@ app.directive('resize', {
       dragDomTop.style.top = '0'
       dragDom.appendChild(dragDomTop)
       dragDomTop.onmousedown = (e) => {
-        const disY = e.clientY - dragDom.offsetHeight
+        const offsetHeight = dragDom.offsetHeight
+        const clientY = e.clientY
         document.onmousemove = (e) => {
           e.preventDefault()
-          console.log('disY', disY)
-          console.log('e.clientY', e.clientY)
-          dragDom.style.height = disY - e.clientY + 'px'
+          dragDom.style.height = clientY - e.clientY + offsetHeight + 'px'
         }
         document.onmouseup = () => {
           document.onmousemove = null

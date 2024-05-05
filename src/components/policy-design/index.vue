@@ -1,8 +1,5 @@
 <template>
   <div class="dnm-container">
-    <div class="tool-meun-container">
-      <el-button @click="save">保存</el-button>
-    </div>
     <div id="container" ref="container" />
     <PropertyPanel v-model:node="propertyPanelData" />
     <Menu v-show="!!menuData" v-model:menuData="menuData" />
@@ -14,9 +11,11 @@ import G6 from '@antv/g6'
 import { createApp, onMounted, ref } from 'vue'
 import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
-import data from './config/data.js'
 import PropertyPanel from './components/property-panel/index.vue'
 import Menu from './components/menu/index.vue'
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
+const { policyProjectData } = policyProjectStore
 
 import {
   defaultStateStyles,
@@ -65,7 +64,7 @@ onMounted(() => {
   })
   window.graph = graph
 
-  graph.data(data)
+  graph.data(policyProjectData.data)
   graph.render()
   graph.fitCenter()
 
@@ -78,10 +77,6 @@ onMounted(() => {
       graph.changeSize(container.clientWidth, container.clientHeight)
     }
 })
-function save() {
-  const data = graph.save()
-  console.log('data', data)
-}
 
 function eventListener() {
   // 鼠标移入目标元素上方，鼠标移到其后代元素上时会触发
@@ -101,6 +96,7 @@ function eventListener() {
   })
   // 鼠标右键
   graph.on('node:contextmenu', (evt) => {
+    console.log('evt', evt)
     evt.preventDefault()
     hadnleShowMenu(evt)
   })
@@ -118,7 +114,7 @@ function eventListener() {
 function hadnleShowMenu({ clientX, clientY, item }) {
   menuData.value = {
     x: clientX,
-    y: clientY,
+    y: clientY - 60, // 60为顶部菜单的高度,
     node: item,
     graph
   }
@@ -135,18 +131,11 @@ function handlePropertyPanel(node) {
 
 <style scoped lang="less">
 .dnm-container {
+  width: 100%;
+  height: 100%;
   background-color: #f4f7f9;
   position: relative;
   overflow: hidden;
-  .tool-meun-container {
-    height: 60px;
-    align-items: center;
-    display: flex;
-    justify-content: end;
-    padding: 0 30px;
-    position: fixed;
-    right: 0;
-  }
 
   #container {
     height: 100vh;

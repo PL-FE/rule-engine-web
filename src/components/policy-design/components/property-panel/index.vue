@@ -28,6 +28,7 @@ import { nodeTypeMap } from '../../config/nodeTypeMap.js'
 
 const node = defineModel('node')
 const visible = computed(() => {
+  console.log('node.value', !!node.value)
   return !!node.value
 })
 const data = computed(() => {

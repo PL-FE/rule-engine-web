@@ -4,7 +4,7 @@
       <b>基础配置</b>
       <el-form :model="form" label-width="auto" label-position="top" class="mt-6">
         <el-form-item label="决策名称" required>
-          <el-input v-model="form.name" />
+          <el-input v-model="policyProjectData.name" @change="(val) => (form.name = val)" />
         </el-form-item>
         <el-form-item label="决策描述">
           <el-input v-model="form.desc" type="textarea" :rows="4" />
@@ -29,6 +29,9 @@
 import { ref } from 'vue'
 import CodeMirror from 'vue-codemirror6'
 import { json } from '@codemirror/lang-json'
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
+const { policyProjectData } = policyProjectStore
 
 const form = ref({
   name: '',
