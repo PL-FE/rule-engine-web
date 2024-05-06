@@ -6,12 +6,12 @@
         <el-input
           ref="policyNameInputRef"
           type="text"
-          v-model="policyProjectData.name"
+          v-model="policyProjectStore.policyProjectData.name"
           class="!w-60 px-4"
           v-if="isEditPolicyName"
           @blur="isEditPolicyName = false"
         ></el-input>
-        <span v-else class="px-4">{{ policyProjectData.name }}</span>
+        <span v-else class="px-4">{{ policyProjectStore.policyProjectData.name }}</span>
         <svg-icon
           v-if="!isEditPolicyName"
           iconName="v-icon-icon-edit"
@@ -43,7 +43,6 @@ import BaseInfo from './base-info/index.vue'
 import PolicyDesign from '@/components/policy-design/index.vue'
 import { usePolicyProjectStore } from '@/stores/policy-project.js'
 const policyProjectStore = usePolicyProjectStore()
-const { policyProjectData } = policyProjectStore
 
 const activeName = ref('1')
 const handleClick = (tab, event) => {

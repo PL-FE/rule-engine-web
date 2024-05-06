@@ -1,13 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 const Layout = () => import('@/components/layout/index.vue');
-const PolicyProject = () => import('@/views/policy-project/index.vue');
 
 // 2. 定义一些路由
 // 每个路由都需要映射到一个组件。
 // 我们后面再讨论嵌套路由。
 const routes = [
     { path: '/', component: Layout },
-    { path: '/policy-project/:id', component: PolicyProject },
+    { path: '/policy-project/:id', component: () => import('@/views/policy-project/index.vue') },
 ]
 
 // 3. 创建路由实例并传递 `routes` 配置

@@ -8,14 +8,13 @@
 
 <script setup>
 import G6 from '@antv/g6'
-import { onMounted, ref } from 'vue'
+import { isReactive, isRef, onMounted, ref, toRaw, watch, watchEffect } from 'vue'
 import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
 import PropertyPanel from './components/property-panel/index.vue'
 import Menu from './components/menu/index.vue'
 import { usePolicyProjectStore } from '@/stores/policy-project.js'
 const policyProjectStore = usePolicyProjectStore()
-const { policyProjectData } = policyProjectStore
 
 import {
   defaultStateStyles,
@@ -28,11 +27,7 @@ import {
 const propertyPanelData = ref(null)
 const menuXY = ref(null)
 let graph = null
-
 onMounted(() => {
-  // const container = document.querySelector('#container')
-  // const width = container.scrollWidth
-  // const height = container.scrollHeight - 1 || 500
   registerBehavior()
   registerNode()
 
@@ -57,19 +52,22 @@ onMounted(() => {
   })
   window.graph = graph
 
-  graph.data(policyProjectData.data)
-  graph.render()
-  graph.fitView()
-
   eventListener()
 
-  if (typeof window !== 'undefined')
-    window.onresize = () => {
-      if (!graph || graph.get('destroyed')) return
-      if (!container || !container.clientWidth || !container.clientHeight) return
-      graph.changeSize(container.clientWidth, container.clientHeight)
+  watchEffect(() => {
+    if (policyProjectStore.policyProjectData?.data) {
+      const { data } = policyProjectStore.policyProjectData
+      initView(toRaw(data))
     }
+  })
 })
+
+function initView(data) {
+  console.log('data', data)
+  graph.data(data)
+  graph.render()
+  graph.fitCenter()
+}
 
 function eventListener() {
   // 鼠标移入目标元素上方，鼠标移到其后代元素上时会触发

@@ -6,21 +6,26 @@
     </div>
     <el-input v-model="filterText" placeholder="请输入关键字" />
     <el-tree
+      :current-node-key="[policyProjectStore.policyProjectData.id]"
+      default-expand-all
       class="tree-box flex-1 overflow-auto"
       ref="treeRef"
-      :data="data"
+      node-key="id"
+      :data="policyProjectStore.policyTreeData"
       :props="defaultProps"
       @node-click="handleNodeClick"
       :filter-node-method="filterNode"
+      highlight-current
     />
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useLayout } from './layoutHooks.js'
-const { leftData } = useLayout()
+import { ref, watch, watchEffect } from 'vue'
 
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
+const { setPolicyProjectData } = policyProjectStore
 const filterText = ref('')
 const treeRef = ref(null)
 watch(filterText, (val) => {
@@ -31,73 +36,22 @@ const filterNode = (value, data) => {
   return data.label.includes(value)
 }
 
+watchEffect(() => {
+  if (policyProjectStore.policyProjectData?.data) {
+    const { id } = policyProjectStore.policyProjectData
+    treeRef.value?.setCurrentKey(id)
+  }
+})
+
 const handleNodeClick = (data) => {
   if (data.children?.length) return
-  leftData.selected = data.label
+  setPolicyProjectData(data)
 }
 
 const defaultProps = {
   children: 'children',
-  label: 'label'
+  label: 'name'
 }
-
-const data = [
-  {
-    label: 'Level one 1',
-    children: [
-      {
-        label: 'Level two 1-1',
-        children: [
-          {
-            label: 'Level three 1-1-1'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Level one 2',
-    children: [
-      {
-        label: 'Level two 2-1',
-        children: [
-          {
-            label: 'Level three 2-1-1'
-          }
-        ]
-      },
-      {
-        label: 'Level two 2-2',
-        children: [
-          {
-            label: 'Level three 2-2-1'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Level one 3',
-    children: [
-      {
-        label: 'Level two 3-1',
-        children: [
-          {
-            label: 'Level three 3-1-1'
-          }
-        ]
-      },
-      {
-        label: 'Level two 3-2',
-        children: [
-          {
-            label: 'Level three 3-2-1'
-          }
-        ]
-      }
-    ]
-  }
-]
 </script>
 
 <style scoped lang="less"></style>

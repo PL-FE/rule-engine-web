@@ -4,7 +4,10 @@
       <b>基础配置</b>
       <el-form :model="form" label-width="auto" label-position="top" class="mt-6">
         <el-form-item label="决策名称" required>
-          <el-input v-model="policyProjectData.name" @change="(val) => (form.name = val)" />
+          <el-input
+            v-model="policyProjectStore.policyProjectData.name"
+            @change="(val) => (form.name = val)"
+          />
         </el-form-item>
         <el-form-item label="决策描述">
           <el-input v-model="form.desc" type="textarea" :rows="4" />
@@ -14,70 +17,187 @@
 
     <el-card class="w-[1200px]" shadow="never">
       <b>自定义入参</b>
-      <code-mirror
-        basic
-        :lang="lang"
-        v-model="codeVal"
-        style="height: 400px"
-        @change="handleCodeChange"
-      />
+      <div class="config flex">
+        <div class="w-96 flex flex-col">
+          <div>
+            JSON <span class="text-red-400 text-sm">{{ codeValErr }}</span>
+          </div>
+          <code-mirror
+            class="code-mirror flex-1 min-h-96"
+            basic
+            :lang="lang"
+            v-model="codeVal"
+            style="height: 400px"
+          />
+        </div>
+        <div class="flex-1 pl-5">
+          <el-row :gutter="20">
+            <el-col :span="6"><span class="validate-text-label">字段名称</span></el-col>
+            <el-col :span="6"><span class="validate-text-label">字段key</span></el-col>
+            <el-col :span="4"><span class="validate-text-label">类型</span></el-col>
+            <el-col :span="6"><span class="validate-text-label">字段解释</span></el-col>
+            <el-col :span="2" class="!flex items-center cursor-pointer">
+              <span @click="hadnleAddJsonItem">
+                <svg-icon
+                  iconName="v-icon-addition"
+                  class="action-btn-radius"
+                  color="#409eff"
+                ></svg-icon>
+              </span>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20" v-for="(item, idx) in codeValWrap" :key="idx">
+            <el-col :span="6"><el-input v-model="item.label"></el-input> </el-col>
+            <el-col :span="6"> <el-input v-model="item.key"></el-input> </el-col>
+            <el-col :span="4"
+              ><el-select v-model="item.type">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-col>
+            <el-col :span="6"><el-input v-model="item.remark"></el-input> </el-col>
+            <el-col :span="2" class="!flex items-center cursor-pointer">
+              <span @click="handleRemoveJsonItem(idx)">
+                <svg-icon
+                  iconName="v-icon-subtraction"
+                  class="action-btn-radius"
+                  color="#409eff"
+                ></svg-icon>
+              </span>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CodeMirror from 'vue-codemirror6'
 import { json } from '@codemirror/lang-json'
 import { usePolicyProjectStore } from '@/stores/policy-project.js'
 const policyProjectStore = usePolicyProjectStore()
-const { policyProjectData } = policyProjectStore
 
 const form = ref({
   name: '',
   desc: ''
 })
-const initJson = {
-  name: `maybaby`,
-  year: 25,
-  weight: 45,
-  height: 165
-}
-// 初始化
+const initJson = [
+  {
+    key: 'age',
+    type: '数值',
+    label: '年龄',
+    remark: '年龄'
+  },
+  {
+    key: 'income',
+    type: '数值',
+    label: '月收入',
+    remark: '月收入数据'
+  },
+  {
+    key: 'overdue',
+    type: '布尔',
+    label: '逾期标志',
+    remark: '逾期标志，0不逾期，1逾期'
+  }
+]
+const options = [
+  {
+    value: '字符串',
+    label: '字符串'
+  },
+  {
+    value: '布尔',
+    label: '布尔'
+  },
+  {
+    value: '数值',
+    label: '数值'
+  }
+]
+let codeValErr = ref('')
 let codeVal = ref('')
+let codeValWrap = ref(initJson)
 // 转成json字符串并格式化
-codeVal.value = JSON.stringify(initJson, null, '\t')
+watch(
+  codeVal,
+  (val) => {
+    if (!val) {
+      return
+    }
+    try {
+      codeValWrap.value = JSON.parse(val)
+      console.log('val2', val)
+      codeValErr.value = ''
+    } catch (error) {
+      codeValErr.value = '格式错误'
+      console.warn('格式错误')
+    }
+  },
+  {
+    immediate: true
+  }
+)
+watch(
+  codeValWrap,
+  (val) => {
+    if (!val) {
+      return
+    }
+    codeVal.value = JSON.stringify(val, null, '\t')
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
 
-const handleCodeChange = (val) => {
-  console.log('val', val)
-}
 // json
 const lang = json()
-// 主题样式设置
-const theme = {
-  '&': {
-    color: 'white',
-    backgroundColor: '#034'
-  },
-  '.cm-content': {
-    caretColor: '#0e9'
-  },
-  '&.cm-focused .cm-cursor': {
-    borderLeftColor: '#0e9'
-  },
-  '&.cm-focused .cm-selectionBackground, ::selection': {
-    backgroundColor: '#074'
-  },
-  '.cm-gutters': {
-    backgroundColor: '#045',
-    color: '#ddd',
-    border: 'none'
-  }
+
+const hadnleAddJsonItem = () => {
+  codeValWrap.value.push({
+    key: `field_${codeValWrap.value.length}`,
+    type: '字符串',
+    label: `label_${codeValWrap.value.length}`,
+    remark: ''
+  })
+}
+const handleRemoveJsonItem = (idx) => {
+  codeValWrap.value.splice(idx, 1)
 }
 </script>
 
+<style lang="less">
+.base-info-container {
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-card {
+    margin-bottom: 20px;
+  }
+}
+</style>
 <style scoped lang="less">
-:deep(.el-card) {
-  margin-bottom: 20px;
+.code-mirror {
+  border: 1px solid #eee;
+  > div {
+    height: 100%;
+  }
+}
+.action-btn-radius {
+  border: 1px solid #409eff;
+  border-radius: 50%;
+}
+.validate-text-label::before {
+  content: '*';
+  color: #f56c6c;
+  margin-right: 4px;
 }
 </style>

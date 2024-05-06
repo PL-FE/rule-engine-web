@@ -8,14 +8,13 @@
 
 <script setup>
 import G6 from '@antv/g6'
-import { createApp, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
 import PropertyPanel from './components/property-panel/index.vue'
 import Menu from './components/menu/index.vue'
 import { usePolicyProjectStore } from '@/stores/policy-project.js'
 const policyProjectStore = usePolicyProjectStore()
-const { policyProjectData } = policyProjectStore
 
 import {
   defaultStateStyles,
@@ -64,7 +63,7 @@ onMounted(() => {
   })
   window.graph = graph
 
-  graph.data(policyProjectData.data)
+  graph.data(policyProjectStore.policyProjectData?.data)
   graph.render()
   graph.fitCenter()
 

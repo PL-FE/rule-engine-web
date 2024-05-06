@@ -9,7 +9,8 @@
           <Aside></Aside>
         </el-aside>
         <el-main>
-          <policyView />
+          <policyView v-if="policyProjectStore.policyProjectData?.data" />
+          <DefaultMain v-else />
         </el-main>
       </el-container>
     </el-container>
@@ -20,9 +21,9 @@
 import Aside from './Aside.vue'
 import Header from './Header.vue'
 import DefaultMain from './Main.vue'
-import { useLayout } from './layoutHooks.js'
-const { leftData } = useLayout()
 import policyView from '@/views/policy-view/index.vue'
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
 </script>
 
 <style scoped lang="less">
