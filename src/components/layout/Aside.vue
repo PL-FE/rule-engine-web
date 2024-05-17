@@ -6,7 +6,7 @@
     </div>
     <el-input v-model="filterText" placeholder="请输入关键字" />
     <el-tree
-      :current-node-key="[policyProjectStore.policyProjectData.id]"
+      :current-node-key="[policyProjectStore.policyProjectData?.id]"
       default-expand-all
       class="tree-box flex-1 overflow-auto"
       ref="treeRef"
