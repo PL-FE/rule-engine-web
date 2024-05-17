@@ -1,6 +1,6 @@
 name: CI/CD
 # 触发条件为 push
-on: [push] # 执行时机的
+on: [push] # 执行时机
 # 任务
 jobs:
   test:
