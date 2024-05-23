@@ -12,8 +12,22 @@
         <el-input class="w-80" v-model="label" :maxlength="5"></el-input>
       </span>
     </div>
-    <div class="from-body">
+    <div class="from-body flex">
+      <el-scrollbar class="from-var w-1/5 min-h-full">
+        <div
+          class="fieid my-3 flex"
+          v-for="varItem in policyProjectStore.varList"
+          :key="varItem.key"
+        >
+          <el-tag type="primary" class="mx-3">变量</el-tag>
+          <el-tooltip :content="varItem.remark" :disabled="!varItem.remark" placement="right">
+            <el-tag type="info " class="flex-1 !justify-start">{{ varItem.label }}</el-tag>
+          </el-tooltip>
+          <el-tag type="warning" class="mx-3 w-20">{{ varItem.type }}</el-tag>
+        </div>
+      </el-scrollbar>
       <component
+        class="opacity-5"
         v-if="data?.nodeType"
         :is="nodeTypeMap[data.nodeType].propertyPanel"
         :node="node"
@@ -25,6 +39,9 @@
 <script setup>
 import { computed } from 'vue'
 import { nodeTypeMap } from '../../config/nodeTypeMap.js'
+
+import { usePolicyProjectStore } from '@/stores/policy-project.js'
+const policyProjectStore = usePolicyProjectStore()
 
 const node = defineModel('node')
 const visible = computed(() => {
@@ -59,7 +76,14 @@ const nodeConfig = computed(() => {
   font-size: 14px;
 
   .top-container {
+    height: 50px;
     border-bottom: 1px solid #dce3e8;
   }
+  .from-body {
+    height: calc(100% - 50px);
+  }
+}
+.from-var {
+  border-right: 1px solid #dce3e8;
 }
 </style>

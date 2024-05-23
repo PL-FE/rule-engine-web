@@ -13,8 +13,7 @@ import registerBehavior from './config/registerBehavior.js'
 import registerNode from './config/registerNode.js'
 import PropertyPanel from './components/property-panel/index.vue'
 import Menu from './components/menu/index.vue'
-import { usePolicyProjectStore } from '@/stores/policy-project.js'
-const policyProjectStore = usePolicyProjectStore()
+import data2 from '@/stores/data.js'
 
 import {
   defaultStateStyles,
@@ -63,18 +62,11 @@ onMounted(() => {
   })
   window.graph = graph
 
-  graph.data(policyProjectStore.policyProjectData?.data)
+  graph.data(data2)
   graph.render()
   graph.fitCenter()
 
   eventListener()
-
-  if (typeof window !== 'undefined')
-    window.onresize = () => {
-      if (!graph || graph.get('destroyed')) return
-      if (!container || !container.clientWidth || !container.clientHeight) return
-      graph.changeSize(container.clientWidth, container.clientHeight)
-    }
 })
 
 function eventListener() {

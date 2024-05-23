@@ -1,7 +1,7 @@
 <template>
   <div class="aside-container px-2 h-full flex flex-col">
     <div class="flex justify-between py-2">
-      <b>决策列表</b>
+      <span class="text-sm">决策列表</span>
       <svg-icon iconName="v-icon-addition" isPointer></svg-icon>
     </div>
     <el-input v-model="filterText" placeholder="请输入关键字" />

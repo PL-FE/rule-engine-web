@@ -26,7 +26,32 @@ export const usePolicyProjectStore = defineStore('policyProject', () => {
         ]
     }])
 
-    return { policyProjectData, policyTreeData, setPolicyProjectData }
+    const varList = ref([
+        {
+            key: 'age',
+            type: '数值',
+            label: '年龄',
+            remark: '年龄'
+        },
+        {
+            key: 'income',
+            type: '数值',
+            label: '月收入',
+            remark: '月收入数据'
+        },
+        {
+            key: 'overdue',
+            type: '布尔',
+            label: '逾期标志',
+            remark: '逾期标志，0不逾期，1逾期'
+        }
+    ])
+
+    const setVarList = (val) => {
+        varList.value = val
+    }
+
+    return { policyProjectData, policyTreeData, setPolicyProjectData, varList, setVarList }
 }, {
     persist: true,
 })

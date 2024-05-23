@@ -87,26 +87,7 @@ const form = ref({
   name: '',
   desc: ''
 })
-const initJson = [
-  {
-    key: 'age',
-    type: '数值',
-    label: '年龄',
-    remark: '年龄'
-  },
-  {
-    key: 'income',
-    type: '数值',
-    label: '月收入',
-    remark: '月收入数据'
-  },
-  {
-    key: 'overdue',
-    type: '布尔',
-    label: '逾期标志',
-    remark: '逾期标志，0不逾期，1逾期'
-  }
-]
+
 const options = [
   {
     value: '字符串',
@@ -123,7 +104,7 @@ const options = [
 ]
 let codeValErr = ref('')
 let codeVal = ref('')
-let codeValWrap = ref(initJson)
+let codeValWrap = ref(policyProjectStore.varList)
 // 转成json字符串并格式化
 watch(
   codeVal,
@@ -151,6 +132,7 @@ watch(
       return
     }
     codeVal.value = JSON.stringify(val, null, '\t')
+    policyProjectStore.setVarList(val)
   },
   {
     deep: true,

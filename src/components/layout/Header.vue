@@ -1,7 +1,7 @@
 <template>
   <div class="left flex items-center">
     <svg-icon iconName="v-icon-black" :size="[100, 40]"></svg-icon>
-    <span class="ml-4">决策引擎</span>
+    <b class="ml-2 text-2xl text-[#1f2620]">· 决策引擎</b>
   </div>
   <div class="right"></div>
 </template>

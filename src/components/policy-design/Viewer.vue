@@ -33,9 +33,8 @@ onMounted(() => {
 
   graph = new G6.TreeGraph({
     container: 'container',
-    fitView: true,
     modes: {
-      default: ['drag-canvas', 'zoom-canvas', 'activate-node']
+      default: ['drag-canvas', 'activate-node']
     },
     defaultNode: {
       type: 'baseNode',
@@ -63,7 +62,6 @@ onMounted(() => {
 })
 
 function initView(data) {
-  console.log('data', data)
   graph.data(data)
   graph.render()
   graph.fitCenter()

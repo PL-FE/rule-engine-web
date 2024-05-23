@@ -31,8 +31,10 @@
       </dib>
     </el-header>
     <el-main class="!flex justify-center !p-0">
-      <BaseInfo v-if="activeName === '1'" />
-      <PolicyDesign v-else-if="activeName === '2'" />
+      <keep-alive>
+        <BaseInfo v-if="activeName === '1'" />
+        <PolicyDesign v-else-if="activeName === '2'" />
+      </keep-alive>
     </el-main>
   </el-container>
 </template>
