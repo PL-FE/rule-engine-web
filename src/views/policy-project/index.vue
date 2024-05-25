@@ -26,9 +26,9 @@
           <el-tab-pane label="执行日志" name="3"></el-tab-pane>
         </el-tabs>
       </div>
-      <dib class="btn-action">
+      <div class="btn-action">
         <el-button @click="handlerPolicyProjectSave">保存</el-button>
-      </dib>
+      </div>
     </el-header>
     <el-main class="!flex justify-center !p-0">
       <keep-alive>
@@ -64,7 +64,6 @@ const handleEditPolicyName = () => {
 
 const handlerPolicyProjectSave = () => {
   const data = window.graph?.save()
-  console.log('data', data)
 }
 </script>
 

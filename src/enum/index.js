@@ -25,3 +25,25 @@ export const DATA_TYPE_OPERATE = [
     { value: "IS NULL", label: "为空" },
     { value: "IS NOT NULL", label: "不为空" }
 ]
+
+export const LOGIC = [
+    {
+        value: 1,
+        label: '且'
+    },
+    {
+        value: 0,
+        label: '或'
+    },
+]
+
+export const PROCESS_RESULT = [
+    {
+        value: 1,
+        label: '通过'
+    },
+    {
+        value: 0,
+        label: '不通过'
+    },
+]

@@ -21,13 +21,14 @@
         >
           <el-tag type="primary" class="mx-3">变量</el-tag>
           <el-tooltip :content="varItem.remark" :disabled="!varItem.remark" placement="right">
-            <el-tag type="info " class="flex-1 !justify-start">{{ varItem.label }}</el-tag>
+            <el-tag type="info" class="flex-1 !justify-start">{{ varItem.label }}</el-tag>
           </el-tooltip>
           <el-tag type="warning" class="mx-3 w-20">{{ varItem.type }}</el-tag>
         </div>
       </el-scrollbar>
       <el-scrollbar class="w-full min-h-full">
         <component
+          class="p-3"
           v-if="data?.nodeType"
           :is="nodeTypeMap[data.nodeType].propertyPanel"
           :key="data.id"
@@ -48,7 +49,6 @@ const policyProjectStore = usePolicyProjectStore()
 
 const node = defineModel('node')
 const visible = computed(() => {
-  console.log('node.value', !!node.value)
   return !!node.value
 })
 const data = computed(() => {

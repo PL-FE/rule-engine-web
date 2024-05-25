@@ -103,7 +103,6 @@ watch(
     }
     try {
       codeValWrap.value = JSON.parse(val)
-      console.log('val2', val)
       codeValErr.value = ''
     } catch (error) {
       codeValErr.value = '格式错误'
