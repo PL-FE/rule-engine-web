@@ -3,6 +3,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .index {
+      border-radius: 100%;
+      background-color: #409eff;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color:#fff;
+      margin-right: 8px;
+    }
+    /* ... */
+  }
 
 body,html{
     margin: 0;

@@ -81,27 +81,16 @@ import { computed, ref, watch } from 'vue'
 import CodeMirror from 'vue-codemirror6'
 import { json } from '@codemirror/lang-json'
 import { usePolicyProjectStore } from '@/stores/policy-project.js'
-const policyProjectStore = usePolicyProjectStore()
+import { DATA_TYPE } from '@/enum/index.js'
 
+const policyProjectStore = usePolicyProjectStore()
 const form = ref({
   name: '',
   desc: ''
 })
 
-const options = [
-  {
-    value: '字符串',
-    label: '字符串'
-  },
-  {
-    value: '布尔',
-    label: '布尔'
-  },
-  {
-    value: '数值',
-    label: '数值'
-  }
-]
+const options = DATA_TYPE
+
 let codeValErr = ref('')
 let codeVal = ref('')
 let codeValWrap = ref(policyProjectStore.varList)

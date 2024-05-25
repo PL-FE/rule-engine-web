@@ -26,12 +26,15 @@
           <el-tag type="warning" class="mx-3 w-20">{{ varItem.type }}</el-tag>
         </div>
       </el-scrollbar>
-      <component
-        class="opacity-5"
-        v-if="data?.nodeType"
-        :is="nodeTypeMap[data.nodeType].propertyPanel"
-        :node="node"
-      ></component>
+      <el-scrollbar class="w-full min-h-full">
+        <component
+          v-if="data?.nodeType"
+          :is="nodeTypeMap[data.nodeType].propertyPanel"
+          :key="data.id"
+          :node="node"
+          :varList="policyProjectStore.varList"
+        ></component>
+      </el-scrollbar>
     </div>
   </div>
 </template>
